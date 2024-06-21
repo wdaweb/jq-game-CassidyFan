@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Card Game Start</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #e0e0e0;
+            color: white;
+            text-align: center;
+            background-image: url(./卡素材/dogs.jpg);
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            padding: 20px;
+            background-image: url(./卡素材/dogs.jpg);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            margin-bottom: 40px;
+            font-size: 3em;
+            font-family: "Noto Sans JP", sans-serif;
+            color: #dcdcdc;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-start {
+            background: #f0f0f0;
+            color: #fff;
+            font-weight: bolder;
+        }
+
+        .btn-settings {
+            background: #f0f0f0;
+            color: #fff;
+            font-weight: bolder;
+        }
+
+        .btn:hover {
+            background: #ACD6FF;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>動物の学校</h1>
+        <button class="btn btn-start">開始遊戲</button>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(document).ready(function() {
+            $('.btn-start').on('click', function() {
+                Swal.fire({
+                    title: '<span style="font-family: \'Noto Sans JP\', sans-serif; font-size: 1em; color: #CA8EFF">遊戲規則</span>',
+                    html: '<p style="font-family: \'Noto Sans JP\', sans-serif; font-size: 1.2em; color: #FFCBB3">請找到兩隻一樣的動物，並且消滅他們吧!</p>',
+                    icon: 'info',
+                    confirmButtonText:'<span style="font-family: \'Noto Sans JP\', sans-serif; font-size: 1em; color: #fff;">了解了</span>',
+                    customClass: {
+                        confirmButton: 'swal2-confirm'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = 'game.html';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

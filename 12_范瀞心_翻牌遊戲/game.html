@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Card Game</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-image: url(./卡素材/dogs.jpg);
+        }
+
+        .container {
+            background-color: #bebebe;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 920px;
+            height: 950px;
+        }
+
+        #game {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-content: space-between;
+            width: 100%;
+            height: 80%;
+            margin-top: -155px;
+        }
+
+        .card {
+            width: 150px;
+            height: 225px;
+            position: relative;
+            margin: 5px;
+            transform-style: preserve-3d;
+            transition: transform 1s;
+        }
+
+        .card-front,
+        .card-back {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            position: absolute;
+            backface-visibility: hidden;
+            border-radius: 10px;
+        }
+
+        .card-front {
+            background: white;
+            background-size: contain;
+        }
+
+        .card-back {
+            background-image: url(./卡素材/all.jpg);
+            transform: rotateY(180deg);
+        }
+
+        .card-close {
+            transform: rotateY(180deg);
+        }
+
+        .card-ok {
+            opacity: 0;
+        }
+
+        .win-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 2em;
+            display: none;
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        .fade-in-out {
+            animation: fadeInOut 3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="game"></div>
+        <div id="winMessage" class="win-message">太棒了 !<br>恭喜過關 ！</div>
+    </div>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js'
+        integrity='sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=='
+        crossorigin='anonymous'></script>
+    <script>
+        const cardImages = [
+            '卡素材/new2/animals-01.jpg',
+            '卡素材/new2/animals-02.jpg',
+            '卡素材/new2/animals-03.jpg',
+            '卡素材/new2/animals-04.jpg',
+            '卡素材/new2/animals-05.jpg',
+            '卡素材/new2/animals-06.jpg',
+            '卡素材/new2/animals-07.jpg',
+            '卡素材/new2/animals-08.jpg',
+            '卡素材/new2/animals-09.jpg',
+            '卡素材/new2/animals-10.jpg'
+        ];
+
+        const cards = [...cardImages, ...cardImages];
+
+        cards.forEach((img, i) => {
+            $('#game').append(`
+                <div class="card card-close" data-number="${i % cardImages.length}">
+                    <div class="card-front" style="background-image: url(${img});"></div>
+                    <div class="card-back"></div>
+                </div>
+            `);
+        });
+
+        for (let i = 0; i < 20; i++) {
+            const randA = Math.floor(Math.random() * cards.length);
+            const randB = Math.floor(Math.random() * cards.length);
+            $('.card').eq(randA).insertAfter($('.card').eq(randB));
+        }
+
+        let flippedCards = [];
+        let lockBoard = false;
+
+        $('.card').click(function () {
+            if (lockBoard) return;
+            if ($(this).hasClass('card-close') && !$(this).hasClass('card-ok')) {
+                $(this).removeClass('card-close');
+                flippedCards.push($(this));
+
+                if (flippedCards.length === 2) {
+                    lockBoard = true;
+                    setTimeout(checkMatch, 1000);
+                }
+            }
+        });
+
+        function checkMatch() {
+            const [firstCard, secondCard] = flippedCards;
+            if (firstCard.data('number') === secondCard.data('number')) {
+                firstCard.addClass('card-ok');
+                secondCard.addClass('card-ok');
+            } else {
+                firstCard.addClass('card-close');
+                secondCard.addClass('card-close');
+            }
+            flippedCards = [];
+            lockBoard = false;
+
+            if ($('.card-ok').length === $('.card').length) {
+                setTimeout(() => {
+                    showWinMessage();
+                }, 500);
+            }
+        }
+
+        function showWinMessage() {
+            const winMessage = $('#winMessage');
+            winMessage.show().addClass('fade-in-out');
+            setTimeout(() => {
+                winMessage.hide().removeClass('fade-in-out');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
